@@ -106,84 +106,47 @@ class PatientRecordSystem:
         else:
             return None
 
-    # Menu-based interface demonstrating how the system works
-    def menu_interface(self):
-        while True:
-            # Display menu options
-            print("Patient Record System Menu:")
-            print("1. Add Patient Record")
-            print("2. Update Patient Record")
-            print("3. Remove Patient from Queue")
-            print("4. Schedule Appointment")
-            print("5. Issue Prescription")
-            print("6. Search Patient Summary")
-            print("7. Exit")
-
-            # Get user input
-            choice = input("Enter your choice (1-7): ")
-
-            # Process user choice
-            if choice == "1":
-                # Add Patient Record
-                patient_id = input("Enter patient ID: ")
-                name = input("Enter patient name: ")
-                age = input("Enter patient age: ")
-                self.add_patient_record(patient_id, name, age)
-                print("Patient record added successfully.")
-            elif choice == "2":
-                # Update Patient Record
-                patient_id = input("Enter patient ID to update: ")
-                medical_history = input("Enter new medical history (leave blank to keep current): ")
-                current_condition = input("Enter new current condition (leave blank to keep current): ")
-                if medical_history or current_condition:
-                    kwargs = {}
-                    if medical_history:
-                        kwargs['medical_history'] = medical_history
-                    if current_condition:
-                        kwargs['current_condition'] = current_condition
-                        self.update_patient_record(patient_id, **kwargs)
-                        print("Patient record updated successfully.")
-                else:
-                    print("No changes made.")
-            elif choice == "3":
-                # Remove Patient from Queue
-                patient_id = input("Enter patient ID to remove from queue: ")
-                self.remove_patient_from_queue(patient_id)
-                print("Patient removed from queue successfully.")
-            elif choice == "4":
-                # Schedule Appointment
-                patient_id = input("Enter patient ID to schedule appointment: ")
-                doctor_id = input("Enter doctor ID: ")
-                self.schedule_appointment(patient_id, doctor_id)
-                print("Appointment scheduled successfully.")
-            elif choice == "5":
-                # Issue Prescription
-                patient_id = input("Enter patient ID to issue prescription: ")
-                medication = input("Enter medication: ")
-                success = self.issue_prescription(patient_id, medication)
-                if success:
-                    print("Prescription issued successfully.")
-                else:
-                    print("Failed to issue prescription. Patient ID not found.")
-            elif choice == "6":
-                # Search Patient Summary
-                patient_id = input("Enter patient ID to search summary: ")
-                summary = self.search_patient_summary(patient_id)
-                if summary:
-                    print("Patient Summary:")
-                    for key, value in summary.items():
-                        print(f"{key}: {value}")
-                else:
-                    print("Patient not found.")
-            elif choice == "7":
-                print("Exiting...")
-                break
-            else:
-                print("Invalid choice. Please enter a number between 1 and 7.")
-
 # Instantiate PatientRecordSystem object
 patient_system = PatientRecordSystem()
 
-# Run the menu interface
-patient_system.menu_interface()
+# Add patient records
+patient_system.add_patient_record("P001", "Fatma Baharoon", 18)
+patient_system.add_patient_record("P002", "Hind Ahli", 19, ["Allergy to penicillin"], "Fever")
+patient_system.add_patient_record("P003", "Roudha Ahli", 19)
+
+# Update patient record (Optional)
+patient_system.update_patient_record("P001", medical_history=["High blood pressure"], current_condition="Headache")
+
+# Schedule appointments
+patient_system.schedule_appointment("P001", "D001")
+patient_system.schedule_appointment("P002", "D002")
+patient_system.schedule_appointment("P003", "D003")
+
+# Issue prescriptions
+patient_system.issue_prescription("P001", "Ibuprofen")
+patient_system.issue_prescription("P002", "Paracetamol")
+
+# Search and display patient summaries
+summary_P001 = patient_system.search_patient_summary("P001")
+print("Patient P001 Summary:")
+print(summary_P001)
+
+summary_P002 = patient_system.search_patient_summary("P002")
+print("\nPatient P002 Summary:")
+print(summary_P002)
+
+summary_P003 = patient_system.search_patient_summary("P003")
+print("\nPatient P003 Summary:")
+print(summary_P003)
+
+# Display the consultation queue before any removal
+print("Consultation Queue:", patient_system.consultation_queue)
+
+# Remove the first patient from the consultation queue
+first_patient = patient_system.consultation_queue.popleft()
+print("First Patient:", first_patient)
+
+# Display the consultation queue after removal
+print("Consultation Queue (After Removal):", patient_system.consultation_queue)
+
 
